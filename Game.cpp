@@ -3,59 +3,69 @@
 #include <SFML/Graphics.hpp>
 #include "Defines.h"
 #include "Player.h"
+#include "Level.h"
 
 using std::cout;
 
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 400
-
-void Update(Player &player);
-
 double dt; // Delta time
+
+
+
+void pollEvents(sf::RenderWindow &window);
+
+void Update(Player &player, sf::RenderWindow &window);
+
+void Render(sf::RenderWindow& window, Player player, Level level);
+
 
 int main()
 {
-	sf::Clock clock; // Create clock to calculate delta time
+	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Platformer", sf::Style::Default); // Create window
+	window.setFramerateLimit(60);
 
-	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Platformer", sf::Style::Default);
+	sf::Clock dt_clock; // Create clock to calculate delta time
 
 	Player player;
-	
-	sf::RectangleShape temp_ground;
 
-	temp_ground.setSize(sf::Vector2f(600, 50));
-	temp_ground.setOrigin(300, 25);
-	temp_ground.setFillColor(sf::Color::Green);
-	temp_ground.setPosition(SCREEN_WIDTH / 2., SCREEN_HEIGHT - 25);
+	Level level;
 	
+	level.initializeLevel();
 
 	while (window.isOpen()) {
-		
-		dt = clock.getElapsedTime().asMicroseconds() * 0.000001;
-		clock.restart();
 
-		//cout << delta << "\n";
-		
-		sf::Event ev;
+		dt = dt_clock.restart().asSeconds();
 
-		while (window.pollEvent(ev)) {
-			if (ev.type == sf::Event::Closed)
-				window.close();
+		pollEvents(window);
 
-		}
+		Update(player, window);
 
-
-		Update(player);
-
-		window.clear(sf::Color::Black);
-		window.draw(player.getBody());
-		window.draw(temp_ground);
-		window.display();
+		Render(window, player, level);
 	}
+
+	
 
 	return 0;
 }
 
-void Update(Player &player) {
+void pollEvents(sf::RenderWindow &window) {
+	sf::Event ev;
+
+	while (window.pollEvent(ev)) {
+		if (ev.type == sf::Event::Closed)
+			window.close();
+	}
+}
+
+void Update(Player &player, sf::RenderWindow &window) {
+	
+	pollEvents(window);
+
 	player.Update(dt);
+}
+
+void Render(sf::RenderWindow &window, Player player, Level level) {
+	window.clear(sf::Color::Black);
+	level.render(window);
+	window.draw(player.getBody());
+	window.display();
 }
