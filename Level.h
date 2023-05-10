@@ -6,15 +6,14 @@
 class Level
 {
 private:
-	int _width, _height, _block_count;
+	int _width, _height, _block_count, _block_width, _block_height;
 	char** _grid;
 	sf::RectangleShape* _blocks;
-
+private:
+	void initializeLevel();
 public:
 	Level();
 	~Level();
-
-	void initializeLevel();
 
 	void render(sf::RenderTarget &target);
 
@@ -24,6 +23,9 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 	int getWallCount() const;
+	int getBlockWidth() const;
+	int getBlockHeight() const;
+	sf::RectangleShape* getBlocks() const;
 
 };
 

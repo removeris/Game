@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Defines.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Level.h"
 
 using std::cout;
@@ -13,23 +14,25 @@ double dt; // Delta time
 
 void pollEvents(sf::RenderWindow &window);
 
-void Update(Player &player, sf::RenderWindow &window);
+void Update(Player &player, sf::RenderWindow &window, const Level &level, Enemy enemy);
 
-void Render(sf::RenderWindow& window, Player player, Level level);
+void Render(sf::RenderWindow& window, Player &player, Level &level, Enemy &enemy, Enemy* &enemy1);
 
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Platformer", sf::Style::Default); // Create window
-	window.setFramerateLimit(60);
-
 	sf::Clock dt_clock; // Create clock to calculate delta time
+	
+
+	Level level;
 
 	Player player;
 
-	Level level;
 	
-	level.initializeLevel();
+	Enemy enemy(sf::Vector2f(300, 300));
+
+	Enemy* enemy1 = new Enemy(sf::Vector2f(300, 200));
 
 	while (window.isOpen()) {
 
@@ -37,12 +40,14 @@ int main()
 
 		pollEvents(window);
 
-		Update(player, window);
+		for (auto a : player.bullets) {
+			a->Logic(enemy1);
+		}
 
-		Render(window, player, level);
+		Update(player, window, level, enemy);
+		
+		Render(window, player, level, enemy, enemy1);
 	}
-
-	
 
 	return 0;
 }
@@ -56,16 +61,28 @@ void pollEvents(sf::RenderWindow &window) {
 	}
 }
 
-void Update(Player &player, sf::RenderWindow &window) {
+void Update(Player &player, sf::RenderWindow &window, const Level &level, Enemy enemy) {
 	
 	pollEvents(window);
 
-	player.Update(dt);
+	player.Update(dt, level);
+
+	
 }
 
-void Render(sf::RenderWindow &window, Player player, Level level) {
+void Render(sf::RenderWindow &window, Player &player, Level &level, Enemy &enemy, Enemy* &enemy1) {
 	window.clear(sf::Color::Black);
+
 	level.render(window);
-	window.draw(player.getBody());
+	player.Render(window);
+	enemy.Render(window);
+
+	if(!enemy1->IsDead())
+		enemy1->Render(window);
+
+	for (auto a : player.bullets) {
+		window.draw(a->getBody());
+	}
+
 	window.display();
 }

@@ -29,22 +29,25 @@ Level::Level()
 	}
 
 	in.close();
+
+	initializeLevel();
 }
 
 Level::~Level()
 {
-	/*for (int i = 0; i < _height; i++) {
-		delete[] _grid[i];
+	for (int i = 0; i < _height; i++) {
+		delete _grid[i];
 	}
-
 	delete _grid;
-	delete _blocks;*/
+	delete _blocks;
 }
 
 void Level::initializeLevel()
 {
 
 	_blocks = new sf::RectangleShape[_block_count];
+	_block_width = 16;
+	_block_height = 16;
 
 	int count = 0;
 
@@ -52,24 +55,15 @@ void Level::initializeLevel()
 		for (int j = 0; j < _width; j++) {
 			
 			if (_grid[i][j] == '#') {
+
+				// Create a block
+
 				sf::RectangleShape block;
-				block.setSize(sf::Vector2f(16, 16));
+				block.setSize(sf::Vector2f(_block_width, _block_height));
 				block.setFillColor(sf::Color::Magenta);
 				block.setOutlineColor(sf::Color::White);
 				block.setOrigin(8, 8);
 				block.setPosition(sf::Vector2f(j * 16 - 8, i * 16 - 8));
-
-				/*
-				grid[0][0] - '#'
-
-				i = 0; j = 0;
-
-				pos.x = 0 x 16 - 8; pos.y = 0 x 16 - 8
-				pos.x = -8; pos.y = -8
-
-				i == 1; j == 1
-				pos.x = 8; pos.y = 8;
-				*/
 
 				_blocks[count] = block;
 				count++;
@@ -104,6 +98,23 @@ int Level::getWallCount() const
 {
 	return _block_count;
 }
+
+int Level::getBlockWidth() const
+{
+	return _block_width;
+}
+
+int Level::getBlockHeight() const
+{
+	return _block_height;
+}
+
+sf::RectangleShape* Level::getBlocks() const
+{
+	return _blocks;
+}
+
+
 
 
 
