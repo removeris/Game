@@ -4,6 +4,7 @@
 class Enemy : public Entity{
 private:
 	bool _is_hit;
+	int dir;
 
 public:
 	Enemy(sf::Vector2f position);

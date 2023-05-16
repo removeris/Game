@@ -1,9 +1,10 @@
 #include "Player.h"
+#include <iostream>
 
 // Constructor / Destructor
 
-Player::Player() {
-	_position = { SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.};
+Player::Player(sf::Vector2f position) {
+	_position = position;
 	_speed = { 4.8f, 1400.f };
 	_max_velocity = { 400.f, 500.f };
 	
@@ -62,12 +63,17 @@ void Player::Logic(double dt, const Level &level)
 
 void Player::Update(double dt, const Level &level) {
 
+	for (int i = 0; i < bullets.size(); i++) {
+		bullets[i]->Update(dt);
+		if (fabs(bullets[i]->getPosition().x - bullets[i]->getStartPosition().x) > 1000.f) {
+			std::cout << bullets[i]->getPosition().x << " " << bullets[i]->getStartPosition().x << " " << fabs(bullets[i]->getPosition().x) - fabs(bullets[i]->getStartPosition().x) << "\n";
+			delete bullets[i];
+			bullets.erase(bullets.begin() + i);
+		}
+	}
+
 	Player::Input(dt);
 	Player::Logic(dt, level);
-
-	for (auto a : bullets) {
-		a->Update(dt);
-	}
 
 	_body.setPosition(_position);
 }
@@ -75,25 +81,26 @@ void Player::Update(double dt, const Level &level) {
 
 void Player::Input(double dt)
 {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _bullet_timer.getElapsedTime().asMilliseconds() > 200) {
+		_bullet_timer.restart();
+		bullets.push_back(new Bullet(_dir, _position));
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		if (_velocity.x < _max_velocity.x) {
 			_velocity.x += _speed.x * dt * multiplier;
 			_dir = 1;
 		}
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		if (_velocity.x > -_max_velocity.x) {
 			_velocity.x += -_speed.x * dt * multiplier;
 			_dir = -1;
 		}
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && _on_ground) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && _on_ground) {
 		if (fabs(_velocity.y) < _max_velocity.y)
 			_velocity.y += -_speed.y * dt * multiplier;
-	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _bullet_timer.getElapsedTime().asMilliseconds() > 200) {
-		_bullet_timer.restart();
-		bullets.push_back(new Bullet(_dir, _position));
 	}
 }
 
@@ -105,9 +112,14 @@ void Player::Collision(const Level &level)
 
 		if (boxCollision(_position.x, _width, _position.y, _height, level.getBlocks()[i].getPosition().x, level.getBlockWidth(), level.getBlocks()[i].getPosition().y, level.getBlockHeight())) {
 						
-			if (_position.y + _height / 2. - (level.getBlocks()[i].getPosition().y - level.getBlockHeight() / 2.) <= 0.3) {
+			if (_position.y + _height / 2. - (level.getBlocks()[i].getPosition().y - level.getBlockHeight() / 2.) <= 0.6) {
 				_on_ground = true;
+				_velocity.y = 0;
+				_position.y -= 0.5f;
 				return;
+			}
+			if (_velocity.y < 0) {
+				_velocity.y = 0;
 			}
 			if (_velocity.x > 0) {
 				_velocity.x = 0;
@@ -117,10 +129,6 @@ void Player::Collision(const Level &level)
 			else if (_velocity.x < 0) {
 				_velocity.x = 0;
 				_position.x += 0.4;
-				return;
-			}
-			if (_velocity.y < 0) {
-				_velocity.y = 0;
 				return;
 			}
 		}

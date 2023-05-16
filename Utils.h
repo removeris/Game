@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 namespace {
 	bool boxCollision(float a_x, int a_w, float a_y, int a_h, float b_x, int b_w, float b_y, int b_h) {
 
@@ -11,6 +13,9 @@ namespace {
 			return true;
 		}
 		return false;
+	}
+	double distanceBetweenPoints(float x1, float y1, float x2, float y2) {
+		return sqrt(pow(y2 - y1, 2) + pow(x2 - x1, 2));
 	}
 	
 }

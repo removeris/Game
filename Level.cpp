@@ -68,6 +68,12 @@ void Level::initializeLevel()
 				_blocks[count] = block;
 				count++;
 			}
+			if (_grid[i][j] == 'P') {
+				_player_start_pos = sf::Vector2f(j * 16 - 8, i * 16 - 8);
+			}
+			if (_grid[i][j] == 'E') {
+				_enemy_start_pos.push_back(sf::Vector2f(j * 16 - 8, i * 16 - 8));
+			}
 		}
 	}
 }
@@ -114,10 +120,6 @@ sf::RectangleShape* Level::getBlocks() const
 	return _blocks;
 }
 
+sf::Vector2f Level::getPlayerStartPosition() const { return _player_start_pos; }
 
-
-
-
-
-
-
+std::vector<sf::Vector2f> Level::getEnemyStartPositions() const { return _enemy_start_pos; }

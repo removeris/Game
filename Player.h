@@ -16,7 +16,7 @@ public:
 	std::vector<Bullet*> bullets;
 
 public:
-	Player();
+	Player(sf::Vector2f position);
 	~Player();
 
 	virtual void Update(double dt, const Level &level) override;

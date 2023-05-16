@@ -3,11 +3,13 @@
 Enemy::Enemy(sf::Vector2f position)
 {
 	_position = position;
-	_speed = { 4.8f, 1400.f };
-	_max_velocity = { 400.f, 500.f };
+	_speed = { 0.3f, 1400.f };
+	_max_velocity = { 100.f, 500.f };
 
 	_width = 16;
 	_height = 16;
+
+	_dir = 1;
 
 	_body_size = sf::Vector2f(_width, _height);
 	_body_color = sf::Color::Red;
@@ -20,6 +22,10 @@ Enemy::Enemy(sf::Vector2f position)
 }
 
 void Enemy::Update(double dt, const Level& level){
+
+	_position.x += _speed.x * dt * multiplier * _dir;
+
+	_body.setPosition(_position);
 }
 
 void Enemy::Logic(double dt, const Level& level) {

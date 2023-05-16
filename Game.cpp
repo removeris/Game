@@ -14,10 +14,13 @@ double dt; // Delta time
 
 void pollEvents(sf::RenderWindow &window);
 
-void Update(Player &player, sf::RenderWindow &window, const Level &level, Enemy enemy);
+void Update(Player& player, sf::RenderWindow& window, const Level& level, std::vector<Enemy*> &enemies, sf::View &view);
 
-void Render(sf::RenderWindow& window, Player &player, Level &level, Enemy &enemy, Enemy* &enemy1);
+void Render(sf::RenderWindow& window, Player &player, Level &level, std::vector<Enemy*> &enemies, sf::View view);
 
+void initEnemies(Level& level, std::vector<Enemy*>& enemies);
+
+void deleteEnemies(std::vector<Enemy*>& enemies);
 
 int main()
 {
@@ -25,14 +28,17 @@ int main()
 	sf::Clock dt_clock; // Create clock to calculate delta time
 	
 
+	sf::View view;
+	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.));
+	view.setSize(600, 400);
+
 	Level level;
 
-	Player player;
+	Player player(level.getPlayerStartPosition());
 
-	
-	Enemy enemy(sf::Vector2f(300, 300));
+	std::vector<Enemy*> enemies(level.getEnemyStartPositions().size());
 
-	Enemy* enemy1 = new Enemy(sf::Vector2f(300, 200));
+	initEnemies(level, enemies);
 
 	while (window.isOpen()) {
 
@@ -40,14 +46,12 @@ int main()
 
 		pollEvents(window);
 
-		for (auto a : player.bullets) {
-			a->Logic(enemy1);
-		}
-
-		Update(player, window, level, enemy);
+		Update(player, window, level, enemies, view);
 		
-		Render(window, player, level, enemy, enemy1);
+		Render(window, player, level, enemies, view);
 	}
+
+	deleteEnemies(enemies);
 
 	return 0;
 }
@@ -61,28 +65,53 @@ void pollEvents(sf::RenderWindow &window) {
 	}
 }
 
-void Update(Player &player, sf::RenderWindow &window, const Level &level, Enemy enemy) {
+void Update(Player& player, sf::RenderWindow& window, const Level& level, std::vector<Enemy*>& enemies, sf::View& view) {
 	
 	pollEvents(window);
 
 	player.Update(dt, level);
-
 	
+	
+	for (auto a : enemies) {
+		if (!a->IsDead()) {
+			for (auto b : player.bullets) {
+				b->Logic(a);
+			}
+			a->Update(dt, level);
+		}
+	}
+
+	view.setCenter(player.getPosition());
 }
 
-void Render(sf::RenderWindow &window, Player &player, Level &level, Enemy &enemy, Enemy* &enemy1) {
+void Render(sf::RenderWindow& window, Player& player, Level& level, std::vector<Enemy*>& enemies, sf::View view) {
 	window.clear(sf::Color::Black);
+
+	window.setView(view);
 
 	level.render(window);
 	player.Render(window);
-	enemy.Render(window);
 
-	if(!enemy1->IsDead())
-		enemy1->Render(window);
+	for (auto a : enemies) {
+		if (!a->IsDead())
+			a->Render(window);
+	}
 
 	for (auto a : player.bullets) {
 		window.draw(a->getBody());
 	}
 
 	window.display();
+}
+
+void initEnemies(Level& level, std::vector<Enemy*>& enemies) {
+	for (int i = 0; i < enemies.size(); i++) {
+		enemies[i] = new Enemy(level.getEnemyStartPositions()[i]);
+	}
+}
+
+void deleteEnemies(std::vector<Enemy*>& enemies) {
+	for (auto a : enemies) {
+		delete a;
+	}
 }

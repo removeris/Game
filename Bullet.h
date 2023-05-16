@@ -5,6 +5,7 @@
 class Bullet
 {
 private:
+	sf::Vector2f _start_pos;
 	sf::Vector2f _position;
 	int _dir;
 	float _velocity;
@@ -21,5 +22,7 @@ public:
 	void Logic(Enemy*& enemy);
 
 	const sf::RectangleShape getBody();
+	const sf::Vector2f getPosition();
+	const sf::Vector2f getStartPosition();
 };
 

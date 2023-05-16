@@ -7,6 +7,9 @@ class Level
 {
 private:
 	int _width, _height, _block_count, _block_width, _block_height;
+	sf::Vector2f _player_start_pos;
+	int _enemy_count;
+	std::vector<sf::Vector2f> _enemy_start_pos;
 	char** _grid;
 	sf::RectangleShape* _blocks;
 private:
@@ -26,6 +29,7 @@ public:
 	int getBlockWidth() const;
 	int getBlockHeight() const;
 	sf::RectangleShape* getBlocks() const;
-
+	sf::Vector2f getPlayerStartPosition() const;
+	std::vector<sf::Vector2f> getEnemyStartPositions() const;
 };
 

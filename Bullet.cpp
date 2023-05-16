@@ -3,8 +3,9 @@
 Bullet::Bullet(int dir, sf::Vector2f position)
 {
 	_dir = dir;
+	_start_pos = position;
 	_position = position;
-	_velocity = 0.3f;
+	_velocity = 3.f;
 	_width = 8;
 	_height = 8;
 
@@ -26,12 +27,12 @@ void Bullet::Update(double dt) {
 void Bullet::Logic(Enemy* &enemy) {
 
 	if (boxCollision(_position.x, _width, _position.y, _height, enemy->getPosition().x, enemy->getSize().x, enemy->getPosition().y, enemy->getSize().y)) {
-		printf("Enemy hit");
 		enemy->Hit();
 	}
 }
 
 const sf::RectangleShape Bullet::getBody() { return _body; }
-
+const sf::Vector2f Bullet::getPosition() { return _position; }
+const sf::Vector2f Bullet::getStartPosition() { return _start_pos; }
 
 
