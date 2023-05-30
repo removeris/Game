@@ -19,6 +19,9 @@ protected:
 	sf::Color _body_color;
 	sf::Vector2f _body_size;
 
+	sf::Sprite _sprite;
+	sf::Texture _texture;
+
 	int _width, _height;
 	int _dir;
 

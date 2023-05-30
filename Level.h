@@ -12,6 +12,7 @@ private:
 	std::vector<sf::Vector2f> _enemy_start_pos;
 	char** _grid;
 	sf::RectangleShape* _blocks;
+	sf::Texture _texture;
 private:
 	void initializeLevel();
 public:

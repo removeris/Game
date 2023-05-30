@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 class Player : public Entity
 {
@@ -11,6 +12,7 @@ private:
 	bool _on_ground;
 
 	sf::Clock _bullet_timer;
+	sf::Texture _bullet_texture;
 
 public:
 	std::vector<Bullet*> bullets;

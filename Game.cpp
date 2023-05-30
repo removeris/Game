@@ -31,6 +31,7 @@ int main()
 	sf::View view;
 	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.));
 	view.setSize(600, 400);
+	view.zoom(0.5);
 
 	Level level;
 

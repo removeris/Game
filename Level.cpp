@@ -6,6 +6,8 @@ Level::Level()
 {
 	_blocks = nullptr;
 
+	_texture.loadFromFile("textures/Block.png");
+
 	std::ifstream in("Level.txt");
 
 	in >> _width >> _height;
@@ -38,8 +40,8 @@ Level::~Level()
 	for (int i = 0; i < _height; i++) {
 		delete _grid[i];
 	}
-	delete _grid;
-	delete _blocks;
+	delete[] _grid;
+	delete[] _blocks;
 }
 
 void Level::initializeLevel()
@@ -59,9 +61,8 @@ void Level::initializeLevel()
 				// Create a block
 
 				sf::RectangleShape block;
+				block.setTexture(&_texture);
 				block.setSize(sf::Vector2f(_block_width, _block_height));
-				block.setFillColor(sf::Color::Magenta);
-				block.setOutlineColor(sf::Color::White);
 				block.setOrigin(8, 8);
 				block.setPosition(sf::Vector2f(j * 16 - 8, i * 16 - 8));
 
