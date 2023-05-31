@@ -20,6 +20,8 @@ void Render(sf::RenderWindow& window, Player &player, Level &level, std::vector<
 
 void initEnemies(Level& level, std::vector<Enemy*>& enemies);
 
+void gameOver(sf::RenderWindow& window, sf::View& view, sf::Text &text);
+
 void deleteEnemies(std::vector<Enemy*>& enemies);
 
 int main()
@@ -27,6 +29,21 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Platformer", sf::Style::Default); // Create window
 	sf::Clock dt_clock; // Create clock to calculate delta time
 	
+	// Game Over scene
+
+	sf::Text game_over;
+	sf::Font font;
+
+	font.loadFromFile("textures/ARCADECLASSIC.TTF");
+
+	game_over.setFont(font);
+	game_over.setString("Game Over!");
+	game_over.setCharacterSize(25);
+	game_over.setOrigin(10, 25);
+	game_over.setFillColor(sf::Color::White);
+	game_over.setOutlineColor(sf::Color::White);
+	game_over.setPosition(SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.);
+
 
 	sf::View view;
 	view.setCenter(sf::Vector2f(SCREEN_WIDTH / 2., SCREEN_HEIGHT / 2.));
@@ -49,7 +66,12 @@ int main()
 
 		Update(player, window, level, enemies, view);
 		
-		Render(window, player, level, enemies, view);
+		if (player.getHP() > 0) {
+			Render(window, player, level, enemies, view);
+		}
+		else {
+			gameOver(window, view, game_over);
+		}
 	}
 
 	deleteEnemies(enemies);
@@ -72,6 +94,7 @@ void Update(Player& player, sf::RenderWindow& window, const Level& level, std::v
 
 	player.Update(dt, level);
 	
+	player.EnemyCollision(enemies);
 	
 	for (auto a : enemies) {
 		if (!a->IsDead()) {
@@ -115,4 +138,15 @@ void deleteEnemies(std::vector<Enemy*>& enemies) {
 	for (auto a : enemies) {
 		delete a;
 	}
+}
+
+void gameOver(sf::RenderWindow &window, sf::View &view, sf::Text &text) {
+	
+	window.clear(sf::Color::Black);
+	
+	view.setCenter(sf::Vector2f(text.getPosition()));
+
+	window.draw(text);
+
+	window.display();
 }

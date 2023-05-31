@@ -24,7 +24,7 @@ Player::Player(sf::Vector2f position) {
 	_body.setPosition(_position);
 
 	_dir = 1;
-	_HP = 3;
+	_HP = 1;
 	_on_ground = false;
 }
 
@@ -111,6 +111,20 @@ void Player::Input(double dt)
 	}
 }
 
+void Player::EnemyCollision(std::vector<Enemy*> enemies)
+{
+	for (auto a : enemies) {
+		if(boxCollision(_position.x, _width, _position.y, _height, a->getPosition().x, a->getSize().x, a->getPosition().y, a->getSize().y)) {
+			if (_i_frame_timer.getElapsedTime().asSeconds() > 1 && !a->IsDead()) {
+				_HP--;
+				_i_frame_timer.restart();
+			}
+		}
+	}
+}
+
+
+
 void Player::Collision(const Level &level)
 {
 	// Check for block collision
@@ -119,7 +133,7 @@ void Player::Collision(const Level &level)
 
 		if (boxCollision(_position.x, _width, _position.y, _height, level.getBlocks()[i].getPosition().x, level.getBlockWidth(), level.getBlocks()[i].getPosition().y, level.getBlockHeight())) {
 						
-			if (_position.y + _height / 2. - (level.getBlocks()[i].getPosition().y - level.getBlockHeight() / 2.) <= 7) {
+			if (_position.y + _height / 2. - (level.getBlocks()[i].getPosition().y - level.getBlockHeight() / 2.) <= 8) {
 				_on_ground = true;
 				_velocity.y = 0;
 				_position.y = level.getBlocks()[i].getPosition().y - level.getBlockHeight() / 2. - 8;
@@ -142,5 +156,9 @@ void Player::Collision(const Level &level)
 	}
 	_on_ground = false;
 }
+
+int Player::getHP() const { return _HP; }
+
+
 
 

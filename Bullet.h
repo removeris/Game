@@ -24,9 +24,9 @@ public:
 	void Update(double dt);
 	void Logic(Enemy*& enemy);
 
-	const sf::RectangleShape getBody();
-	const sf::Vector2f getPosition();
-	const sf::Vector2f getStartPosition();
-	const bool hasCollided();
+	sf::RectangleShape getBody() const;
+	sf::Vector2f getPosition() const;
+	sf::Vector2f getStartPosition() const;
+	bool hasCollided() const;
 };
 

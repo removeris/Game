@@ -35,10 +35,10 @@ public:
 
 	// Accessors
 
-	sf::Vector2f getSpeed();
-	sf::RectangleShape getBody();
-	sf::Vector2f getVelocity();
-	sf::Vector2f getPosition();
-	sf::Vector2f getSize();
+	sf::Vector2f getSpeed() const;
+	sf::RectangleShape getBody() const;
+	sf::Vector2f getVelocity() const;
+	sf::Vector2f getPosition() const;
+	sf::Vector2f getSize() const;
 };
 

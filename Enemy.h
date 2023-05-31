@@ -15,6 +15,6 @@ public:
 	virtual void Logic(double dt, const Level& level) override;
 
 	void Hit();
-	const bool IsDead();
+	bool IsDead() const;
 };
 

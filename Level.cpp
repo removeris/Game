@@ -116,10 +116,7 @@ int Level::getBlockHeight() const
 	return _block_height;
 }
 
-sf::RectangleShape* Level::getBlocks() const
-{
-	return _blocks;
-}
+sf::RectangleShape* Level::getBlocks() const { return _blocks; }
 
 sf::Vector2f Level::getPlayerStartPosition() const { return _player_start_pos; }
 

@@ -6,7 +6,7 @@ Enemy::Enemy(sf::Vector2f position)
 	_texture.loadFromFile("textures/Skeleton.png");
 	_position = position;
 	_speed = { 0.3f, 1400.f };
-	_max_velocity = { 100.f, 500.f };
+	_max_velocity = { 60.f, 500.f };
 
 	_width = 16;
 	_height = 16;
@@ -48,7 +48,7 @@ void Enemy::Hit() {
 	_is_hit = true;
 }
 
-const bool Enemy::IsDead() { return _is_hit; }
+bool Enemy::IsDead() const { return _is_hit; }
 
 
 

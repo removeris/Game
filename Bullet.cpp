@@ -36,9 +36,9 @@ void Bullet::Logic(Enemy* &enemy) {
 	}
 }
 
-const sf::RectangleShape Bullet::getBody() { return _body; }
-const sf::Vector2f Bullet::getPosition() { return _position; }
-const sf::Vector2f Bullet::getStartPosition() { return _start_pos; }
-const bool Bullet::hasCollided() { return _collided; }
+sf::RectangleShape Bullet::getBody() const { return _body; }
+sf::Vector2f Bullet::getPosition() const { return _position; }
+sf::Vector2f Bullet::getStartPosition() const { return _start_pos; }
+bool Bullet::hasCollided() const { return _collided; }
 
 

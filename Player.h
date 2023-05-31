@@ -14,6 +14,8 @@ private:
 	sf::Clock _bullet_timer;
 	sf::Texture _bullet_texture;
 
+	sf::Clock _i_frame_timer;
+
 public:
 	std::vector<Bullet*> bullets;
 
@@ -25,8 +27,13 @@ public:
 	
 	virtual void Logic(double dt, const Level &level) override;
 
+
 	void Input(double dt);
 	
+	void EnemyCollision(std::vector<Enemy*> enemies);
+
 	void Collision(const Level &level);
+
+	int getHP() const;
 };
 
